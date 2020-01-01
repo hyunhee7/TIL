@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
+public class p14502 {
 	static boolean[][] visited;
 	static int[][] map;
 	static int n,m;
