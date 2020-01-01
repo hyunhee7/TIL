@@ -3,10 +3,9 @@ package BOJ;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
+public class p14499 {
 	static int[] dx = {0,0,0,-1,1};
 	static int[] dy = {0,1,-1,0,0};
 	static int top = 0; //주사위 좌표
@@ -26,7 +25,6 @@ public class Main {
 		int k = Integer.parseInt(st.nextToken());
 		int[][] map = new int[n][m];
 		int[] order = new int[k];
-		
 		for(int i=0;i<n;i++) {
 			st = new StringTokenizer(br.readLine());
 			for(int j=0;j<m;j++) {
