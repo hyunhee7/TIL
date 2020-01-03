@@ -18,7 +18,9 @@
 - 후위순회(postorder)
 	- 1.Left 2.Right 3.Root
 
-코드 구현
+코드 구현 
+- [강의 참고](https://www.youtube.com/watch?v=QN1rZYX6QaA)
+
     
     /*
      *       (1)  
