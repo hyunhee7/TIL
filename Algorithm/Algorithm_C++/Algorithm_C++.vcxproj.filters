@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ14888_연산자끼워넣기.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="BOJ14888_연산자끼워넣기_2.cpp">
+    <ClCompile Include="SWEA_등산로조성.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
