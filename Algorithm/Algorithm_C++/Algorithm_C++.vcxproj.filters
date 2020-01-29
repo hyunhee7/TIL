@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ15685_드래곤커브.cpp">
+    <ClCompile Include="SWEA5648_원자소멸시뮬레이션.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
