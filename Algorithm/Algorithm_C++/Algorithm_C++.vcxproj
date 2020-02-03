@@ -19,8 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SWEA5653_줄기세포배양.cpp" />
-    <ClCompile Include="SWEA5653_줄기세포배양_2.cpp" />
+    <ClCompile Include="BOJ16235_나무재테크.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
