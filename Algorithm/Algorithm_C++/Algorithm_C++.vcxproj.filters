@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ17144_미세먼지안녕.cpp">
+    <ClCompile Include="SWEA2105_디저트카페.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
