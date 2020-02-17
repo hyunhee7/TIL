@@ -64,7 +64,7 @@ void dfs(int cnt, int valu, int res) {
 		return;
 	}
 	if (cnt > d ) return;
-	cout << "cnt, res: "<<cnt<<" "<<res<<endl;
+	//cout << "cnt, res: "<<cnt<<" "<<res<<endl;
 	//투약할 위치 지정
 
 	dfs(cnt + 1, valu, res);
