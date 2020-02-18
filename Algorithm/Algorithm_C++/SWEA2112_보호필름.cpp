@@ -12,26 +12,6 @@ void dfs(int cnt, int valu, int res) {
 	
 	if (valu == res) {
 		if (isFin) return;
-		/*for (int i = 1; i <= d; i++) {
-			for (int j = 1; j <= w; j++) {
-				tmpmap[i][j] = map[i][j];
-			}
-		}*/
-		/*cout << "--------" << endl;
-		for (int i = 1; i <= d; i++) {
-			for (int j = 1; j <= w; j++) {
-				cout << map[i][j] << ' ';
-			}
-			cout << endl;
-		}*/
-		/*for (int i = 1; i <= d; i++) {
-			if (list[i] == 1 || list[i] == 2) {
-				for (int j = 1; j <= w; j++) {
-					tmpmap[i][j] = map[i][j];
-				}
-			}
-		}*/
-		//cout << "cnt, res: " << cnt << " " << res << endl;
 		int val = 0;
 		//연속확인
 		for (int i = 1; i <= w; i++) {
@@ -45,15 +25,12 @@ void dfs(int cnt, int valu, int res) {
 				else {
 					start = j;
 					tmp = 1;
-					//if (j + k - 1 > d) break;
 				}
 				if (k == tmp) {
-					//cout << "res: " << res << ", i: " << i << ", tmp: " << tmp << endl;
 					isOK = true;
 					val++;
 					break;
 				}
-				//cout << j << " " << start << endl;
 			}
 			if (!isOK) break;
 		}
@@ -64,7 +41,6 @@ void dfs(int cnt, int valu, int res) {
 		return;
 	}
 	if (cnt > d ) return;
-	//cout << "cnt, res: "<<cnt<<" "<<res<<endl;
 	//투약할 위치 지정
 
 	dfs(cnt + 1, valu, res);
@@ -100,13 +76,6 @@ int main() {
 				cin >> map[i][j];
 			}
 		}
-		/*for (int i = 1; i <= d; i++) {
-			for (int j = 1; j <= w; j++) {
-				cout<< map[i][j]<<' ';
-			}
-			cout << endl;
-		}
-		cout << "--" << endl;*/
 		for (int r = 0; r < d; r++) {
 			dfs(1, 0, r);
 
@@ -115,8 +84,6 @@ int main() {
 				break;
 			}
 		}
-		//cout << answer << endl;
 		cout << "#" << t << " " << answer << endl;
 	}
-
 }

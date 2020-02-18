@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SWEA2112_보호필름.cpp">
+    <ClCompile Include="BOJ13460_구슬탈출2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
