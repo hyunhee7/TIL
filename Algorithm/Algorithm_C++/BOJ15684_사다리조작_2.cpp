@@ -28,12 +28,15 @@ bool config() {
 		if (index == j) {
 			count++;
 		}
+		//<<가지치기 하면 속도가 빨라진다!>>
+		else
+			return false;
 	}
 	//cout << "count: " <<count << endl;
 	if (count == n)return true;
 	else return false;
 }
-void dfs(int p, int q, int cnt, int res) {
+void dfs(int p, int cnt, int res) {
 	if (isOK) return;
 	if (cnt == res) {
 		//cout << res << endl;
@@ -47,7 +50,7 @@ void dfs(int p, int q, int cnt, int res) {
 			if (map[i][j] == 1) continue;
 			if ((map[i][j - 1] == 1 && j > 1) || (map[i][j + 1] == 1 && j < n - 1)) continue;
 			map[i][j] = 1;
-			dfs(i, j, cnt + 1, res);
+			dfs(i, cnt + 1, res);
 			if (isOK) return;
 			map[i][j] = 0;
 			
@@ -63,11 +66,9 @@ int main() {
 		map[a][b] = 1;
 	}
 	int res = 0;
-	while (true) {
-		if (res > 3) break;
-		dfs(1, 1, 0, res);
-		if (isOK) break;
-		res++;
+	for (int i = 0; i <= 3; i++) {
+		dfs(1, 0, i);
+		if (isOK) { res = i; break; }
 	}
 	if (isOK) answer = res;
 	else answer = -1;
