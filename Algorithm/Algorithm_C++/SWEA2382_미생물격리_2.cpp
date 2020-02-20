@@ -122,6 +122,6 @@ int main() {
 				answer += cells[i].num;
 			}
 		}
-		cout << "#" << "1" << " " << answer << endl;
+		cout << "#" << t << " " << answer << endl;
 	}
 }
