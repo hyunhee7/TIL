@@ -3,6 +3,7 @@
 */
 #include <iostream>
 #include <queue>
+#include <vector>
 using namespace std;
 int n, l, r;
 int map[51][51];
@@ -12,9 +13,10 @@ int dy[] = { 0,0,1,-1 };
 bool bfs(int a, int b) {
 	bool isMove = false;
 	queue<pair<int, int>> q;
-	queue<pair<int, int>> list;
+	//queue<pair<int, int>> list;
+	vector<pair<int, int>> list;
 	q.push({ a,b });
-	list.push({ a,b });
+	list.push_back({ a,b });
 	visited[a][b] = true;
 	int total = map[a][b];
 	int num = 1;
@@ -33,7 +35,7 @@ bool bfs(int a, int b) {
 					num += 1;
 					visited[nx][ny] = true;
 					q.push({ nx,ny });
-					list.push({ nx,ny });
+					list.push_back({ nx,ny });
 				}
 			}
 		}
@@ -41,13 +43,17 @@ bool bfs(int a, int b) {
 	if (num > 1) {
 		int val = total / num;
 		//cout << total << " " << num << endl;
-		while (!list.empty()) {
+		/*while (!list.empty()) {
 			map[list.front().first][list.front().second] = val;
 			list.pop();
+		}*/
+		//큐보다는 벡터가 더 빠르다.
+		for (int i = 0; i < list.size(); i++) {
+			map[list[i].first][list[i].second] = val;
 		}
-		isMove = true;
+		return true;
 	}
-	return isMove;
+	else return false;
 }
 int main() {
 	cin >> n >> l >> r;
@@ -72,6 +78,7 @@ int main() {
 		if (cnt == 0)break;
 		else res += 1;
 		//cout << "---" << endl;
+		//fill보다 그냥 돌리는게 빠른듯
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				visited[i][j] = false;
