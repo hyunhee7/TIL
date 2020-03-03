@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ17070_파이프옮기기1.cpp">
+    <ClCompile Include="SWEA2383_점심식사시간_2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
