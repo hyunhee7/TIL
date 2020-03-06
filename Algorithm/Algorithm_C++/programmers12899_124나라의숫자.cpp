@@ -1,6 +1,5 @@
 #include <iostream>
 using namespace std;
-int dx[] = { 1,2,4 };
 string solution(int n) {
     string answer = "";
     int c;

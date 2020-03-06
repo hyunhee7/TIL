@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ10026_적록색약.cpp">
+    <ClCompile Include="BOJ17135_캐슬디펜스.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
