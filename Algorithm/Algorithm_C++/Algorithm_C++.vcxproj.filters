@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ17142_연구소3_2.cpp">
+    <ClCompile Include="BOJ17825_주사위윷놀이_2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
