@@ -69,3 +69,24 @@ Collections.sort(pointList, myComparator);
 ```
 
 ## String, StringBuilder, StringBuffer의 차이
+### String
+* 새로운 값을 할당할 때마다 새로운 클래스에 대한 객체가 생성
+* String 값은 바꿀 수 없다.
+	* String 저장 형태 : private final char[]
+	* private : 외부에서 접근 불가
+	* final : 초기값 변경 불가
+* String + String + String ...
+	* 각각의 String 주소값이 Stack에 쌓임
+	* Garbage Collector 호출 전까지 String 객체들은 Heap에 쌓여 메모리에 치명적
+	* String 직접 더하는 것보다 StringBuilder, StringBuffer 이용이 더 좋다.
+
+### StringBuilder, StringBuffer
+* 메모리에 append하는 방식
+* 클래스에 대한 객체를 직접 생성하지 않는다.
+* StringBuilder
+	* 변경 가능한 문자열
+	* 비동기 처리
+* StringBuffer
+	* 변경 가능한 문자열
+	* 동기 처리
+	* multiple thread 환경에서 안전한 클래스(thread safe)
