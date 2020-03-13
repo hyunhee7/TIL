@@ -123,14 +123,24 @@ ISP업체를 통해 연결. 인터넷과 네트워크망을 임대해주는 업�
 ### 3-way handshaking
 TCP를 사용한 데이터 송수신 간의 정확한 전송을 보장하기 위한 **세션 수립 과정**
 ##### 1. 클라이언트가 서버에게 요청 세그먼트 전송
+송신자가 최초로 데이터를 전송할 때 Sequence Number를 임의의 랜덤 숫자로 지정
+SYN 플래그 비트를 1로 설정해서 전송
+
     Flag : SYN
-    S:100 A:0
+    PORT : Client(CLOSED),Server(Listen)
 ##### 2. 서버가 클라이언트의 요청을 받아들이는 세그먼트 전송, 클라이언트로 향하는 트래픽에 대한 초기화 정보를 포함하는 세그먼트를 전송
+수신자는 Acknowledgement Number 필드를 Sequence Number+1로 지정
+SYN과 ACK 플래그 비트 1로 설정해서 전송
+
     Flag : SYN + ACK
-    S:2000 A:101
+    PORT : Client(CLOSED),Server(SYN_RCV)
 ##### 3. 클라이언트는 이를 응답하는 세그먼트 전송
+마지막 접속 요청 프로세스 A가 수락 확인을 보내 연결 맺음
+전송 데이터가 있을 경우, 이때 전송
+
+	PORT : Client(ESTABLISHED), Server(SYN_RCV)
     Flag : ACK
-    S:101 A:2001
+	PORT : Client(ESTABLISHED), Server(ESTABLISHED)
 
 ### 4-way handshaking
 TCP를 사용한 데이터 송수신 간의 정확한 전송을 보장하기 위한 **세션 종료 과정**
