@@ -19,20 +19,11 @@ vector<INFO> list;
 bool isFin = false;
 void blue(INFO info) {
 	//방향 바꾸기
-	int x = info.x;
-	int y = info.y;
-	int index = info.index;
-	bool isChange = false;
-	int vsize = mal[x][y].size();
-	for (int i = vsize - 1; i >= 0; i--) {
-		int now = mal[x][y][i];
-		if (list[now].dir == 1 || list[now].dir == 2) {
-			list[now].dir = 3 - list[now].dir;
-		}
-		else {
-			list[now].dir = 7 - list[now].dir;
-		}
-		if (i == now)break;
+	if (list[info.index].dir == 1 || list[info.index].dir == 2) {
+		list[info.index].dir = 3 - list[info.index].dir;
+	}
+	else {
+		list[info.index].dir = 7 - list[info.index].dir;
 	}
 }
 void white(INFO info, int nx ,int ny) {
@@ -50,7 +41,7 @@ void white(INFO info, int nx ,int ny) {
 		if (now == index) break;
 	}
 	for (int i = tmp.size()-1; i >= 0; i--) {
-		mal[nx][ny].push_back(i);
+		mal[nx][ny].push_back(tmp[i]);
 	}
 }
 void red(INFO info, int nx, int ny) {
@@ -68,7 +59,7 @@ void red(INFO info, int nx, int ny) {
 		if (now == index) break;
 	}
 	for (int i = 0; i < tmp.size(); i++) {
-		mal[nx][ny].push_back(i);
+		mal[nx][ny].push_back(tmp[i]);
 	}
 }
 void move() {
@@ -80,20 +71,20 @@ void move() {
 		//범위밖
 		if (map[nx][ny] == 2 || nx <= 0 || nx > n || ny <= 0 || ny > n) {
 			//방향 반대
-			cout << info.dir << ", " << "전 dir;" << nx << " " << ny << endl;
+			//cout << info.dir << ", " << "전 dir;" << nx << " " << ny << endl;
 			blue(info);
 			nx = info.x + dx[list[i].dir];
 			ny = info.y + dy[list[i].dir];
 			info.dir = list[i].dir;
-			cout << info.dir<<", "<<"dir;"<<nx << " " << ny << endl;
+			//cout << info.dir<<", "<<"dir;"<<nx << " " << ny << endl;
 			if (map[nx][ny] == 2 || nx <= 0 || nx > n || ny <= 0 || ny > n) {
-				blue(info);
-				cout << "여기" << endl;
+				//blue(info);
+				//cout << "index: " << info.index << " " << nx << " " << ny << endl;
 				continue;
-			}
+			}else if(map[nx][ny]==0) white(info, nx, ny);
+			else if(map[nx][ny]==1) red(info, nx, ny);
 		}
-		
-		if (map[nx][ny] == 0) {
+		else if (map[nx][ny] == 0) {
 			//cout << "이동:"<< nx << " " << ny << endl;
 			white(info, nx, ny);
 		}
@@ -101,11 +92,10 @@ void move() {
 			red(info, nx, ny);
 		}
 
-		cout<<"size:" <<mal[nx][ny].size() << endl;
-		cout << nx << " " << ny << endl;
+		//cout<<"size:" <<mal[nx][ny].size() << endl;
+		//cout << "index: "<<info.index <<" "<< nx << " " << ny << endl;
 
 		if (mal[nx][ny].size() >= 4) {
-			
 			isFin = true;
 			return;
 		}
@@ -129,7 +119,7 @@ int main() {
 	int answer = 1;
 	while (answer < 1000) {
 		//1. 모든 말 이동
-		cout << "time:" << answer << endl;
+		//cout << "time:" << answer << endl;
 		move();
 		//2. 
 		if (isFin) break;
