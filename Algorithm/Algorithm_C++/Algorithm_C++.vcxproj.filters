@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ17837_새로운게임2_2.cpp">
+    <ClCompile Include="BOJ17779_게리맨더링2_2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
