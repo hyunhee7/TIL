@@ -1,15 +1,42 @@
-# Tree
-나무를 뒤집어 놓았다고 하여 Tree라 부릅니다. 값이 들어간 곳을 노드(node), 데이터를 이어주는 선을 엣지(edge)라고 합니다.
-- [참고](https://ratsgo.github.io/data%20structure&algorithm/2017/10/21/tree/)
+# 자료구조
 
-## 트리의 종류
+## 그래프
+* 노드와 간선을 모아놓은 자료구조
+* 네트워크 모델
+* 루트 노드의 개념이 없다.
+* 부모 - 자식의 개념이 없다.
+* DFS, BFS로 순회가 이루어진다.
+
+
+## 트리
+* 비선형 자료구조
+* 나무를 뒤집어 놓았다고 하여 Tree라 부른다. 
+* 값이 들어간 곳을 노드(node), 데이터를 이어주는 선을 엣지(edge)라고 한다.
+* 그래프의 한 종류이다.
+* 노드가 N개인 트리는 N-1개의 간선이 존재한다.
+* 자식 노드는 하나의 부모 노드만 가진다.
+
+[참고](https://ratsgo.github.io/data%20structure&algorithm/2017/10/21/tree/)
+
+### 노드
+트리는 루트노드를 갖고, 0개 이상의 자식 노드를 갖는다.
+```java
+class Node{
+	public int name;
+    public Node[] children; //Node배열을 통해 여러개의 자식 노드를 갖을 수 있음을 알 수 있다
+}
+```
+
+### 트리의 종류
 - Binary Search Tree(BST)
 - Complete Binary Tree
 - Full Binary Tree
 - Perfect Binary Tree
 
-## 트리 순회
+### 트리 순회
 노드를 체계적인 방법으로 방문하는 과정을 말합니다. 하나도 빠뜨리지 않고, 정확히 한 번만 중복없이 방문해야 합니다.
+
+
 
 - 전위순회(preorder)
 	- 1.Left 2.Root 3.Right
@@ -90,5 +117,4 @@
         }
 
     }
-
 ```
