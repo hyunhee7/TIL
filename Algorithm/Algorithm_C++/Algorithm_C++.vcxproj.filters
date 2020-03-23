@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ16637_괄호추가하기.cpp">
+    <ClCompile Include="BOJ15649_N과M1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
