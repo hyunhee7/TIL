@@ -11,7 +11,7 @@ void dfs(int cnt) {
 		for (int i = 0; i < m; i++) {
 			cout << res[i] << ' ';
 		}
-		cout << endl;
+		cout << '\n';
 		return;
 	}
 	for (int i = 1; i <= n; i++) {
