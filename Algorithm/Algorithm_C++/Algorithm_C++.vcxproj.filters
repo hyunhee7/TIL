@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BOJ17136_색종이붙이기.cpp">
+    <ClCompile Include="BOJ17406_배열돌리기4.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
