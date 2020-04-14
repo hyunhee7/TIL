@@ -46,7 +46,6 @@ void bfs(int a, int b, int val) {
 				visited[nx][ny] = true;
 				map[nx][ny] = val;
 				q.push({ nx,ny });
-
 			}
 		}
 	}
