@@ -94,6 +94,9 @@ void getDis(int rc, int r, int c) {
 bool getConnected() {
 	memset(connected, 0, sizeof(connected));
 	memset(isConn, 0, sizeof(isConn));
+
+	bool flag = false;
+	//선택된 연결 노드 표시
 	for (int i = 0; i < load.size(); i++) {
 		if (selected[i]) {
 			int x = load[i].first.first;
@@ -102,38 +105,38 @@ bool getConnected() {
 			connected[y][x] = true;
 		}
 	}
+	//모두 연결되었는지 확인
 	queue<int> q;
 	q.push(1);
 	isConn[1] = true;
-	int connCount = 1;
-	bool flag = false;
+	int connCnt = 1;
 	while (!q.empty()) {
-		int v = q.front();
-		q.pop();
-		if (connCount == totalNum) {
+		if (connCnt == totalNum) {
 			flag = true;
 			break;
 		}
+		int val = q.front();
+		q.pop();
+
 		for (int i = 1; i <= totalNum; i++) {
-			if (v == i) continue;
-			if (connected[v][i] && !isConn[i]) {
-				isConn[i] = true;
+			if (val == i)continue;
+			if (connected[val][i] && !isConn[i]) {
 				q.push(i);
-				connCount++;
+				isConn[i] = true;
+				connCnt++;
 			}
 		}
 	}
 	return flag;
 }
 void dfs(int index, int res, int cnt) {
-	if (cnt >= 1) { //1개 이상 뽑으면 연결 여부 확인
+	if (cnt >= 1) {
 		if (getConnected() == true) {
 			answer = min(res, answer);
 		}
 	}
-	//index부터 시작, 가지치기, 연결할 길 뽑기(그냥 다 돌려보기)
 	for (int i = index; i < load.size(); i++) {
-		if (selected[i]) continue; //해당 load 연결여부 확인했나
+		if (selected[i]) continue;
 		selected[i] = true;
 		dfs(i, res + load[i].second, cnt + 1);
 		selected[i] = false;
