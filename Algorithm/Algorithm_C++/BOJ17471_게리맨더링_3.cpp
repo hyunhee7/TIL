@@ -12,7 +12,6 @@ int total = 0;
 int answer = MAX;
 int pnum[11];
 int connected[11][11];
-vector<pair<int, int>> conn;
 bool team[11];
 bool isConnected() {
 	bool visitedA[11];
@@ -21,16 +20,15 @@ bool isConnected() {
 	memset(visitedB, 0, sizeof(visitedB));
 	int anum = 0;
 	int bnum = 0;
+	//A, B팀 갯수 카운트
 	for (int i = 1; i <= n; i++) {
-		//cout << team[i] << ' ';
 		if (team[i])anum++;
 		else bnum++;
 	}
-	//cout << endl;
 	bool flag = false;
-	//cout << anum << " " << bnum << endl;
 	queue<int> q;
 	int aval = 0;
+	//A팀 첫번째 노드 큐에 넣기
 	for (int i = 1; i <= n; i++) {
 		if (team[i]) {
 			aval++;
@@ -39,7 +37,7 @@ bool isConnected() {
 			break;
 		}
 	}
-	
+	//A팀 연결상태 확인
 	while (!q.empty()) {
 		if (anum == aval) {
 			flag = true;
@@ -56,7 +54,9 @@ bool isConnected() {
 			}
 		}
 	}
+	//연결 안될 경우 return
 	if (!flag) return flag;
+	//B팀 첫번째 노드 넣기
 	int bval = 0;
 	queue<int> qb;
 	for (int i = 1; i <= n; i++) {
@@ -67,6 +67,7 @@ bool isConnected() {
 			break;
 		}
 	}
+	//B팀 연결 상태 확인
 	while (!qb.empty()) {
 		if (bnum == bval) {
 			flag = true;
@@ -83,21 +84,20 @@ bool isConnected() {
 			}
 		}
 	}
-
+	//A, B팀 모두 연결되있을 경우 true
 	if (anum == aval && bnum == bval) flag = true;
 	else flag = false;
 	return flag;
 }
 void dfs(int index, int res, int cnt) {
+	//중복 줄이기 위한 조건문
 	if (cnt > n / 2)return;
 	if (cnt >= 1) {
-		//하나라도 나눴으면 인구차이 체크
-		//연결 여부 체크
+		//2.나눠진 팀의 연결 상태 확인
 		if (isConnected()) {
-			
+			//3.인구 차이 최소값인지 확인
 			int bteam = total - res;
 			int ans = abs(res - bteam);
-			//cout << "number: " << res << " " << bteam << endl;
 			if (answer > ans)answer = ans;
 		}
 	}
@@ -124,7 +124,7 @@ int main() {
 			connected[i][node] = 1;
 		}
 	}
-	//1. 편나누기
+	//1. 두 팀으로 나누기
 	dfs(1, 0, 0);
 	if (answer == MAX)answer = -1;
 	cout << answer;
