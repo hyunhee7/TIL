@@ -1,4 +1,10 @@
 
+.idea/
+out/
+Algorithm/Algorithm_JAVA/.idea/
+Algorithm/Algorithm_JAVA/out/
+TIL.iml
+
 ### Eclipse ###
 .metadata
 bin/
@@ -482,3 +488,24 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,visualstudio
+.idea/.gitignore
+.idea/checkstyle-idea.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/sonarlint/
+.idea/vcs.xml
+Algorithm/Algorithm_JAVA/.idea/.gitignore
+Algorithm/Algorithm_JAVA/.idea/checkstyle-idea.xml
+Algorithm/Algorithm_JAVA/.idea/misc.xml
+Algorithm/Algorithm_JAVA/.idea/modules.xml
+Algorithm/Algorithm_JAVA/.idea/sonarlint/
+Algorithm/Algorithm_JAVA/.idea/vcs.xml
+Algorithm/Algorithm_JAVA/Algorithm_JAVA.iml
+Algorithm/Algorithm_JAVA/out/production/Algorithm_JAVA/.gitignore
+JAVA/java8/src/
+TIL.iml
+out/production/TIL/.gitignore
+out/production/TIL/.idea/.gitignore
+out/production/TIL/.idea/checkstyle-idea.xml
+out/production/TIL/.idea/vcs.xml
+out/production/TIL/META-INF/
