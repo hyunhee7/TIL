@@ -72,4 +72,87 @@ map.put("4", "4");
 map.forEach((k, v)->System.out.print("{"+k+","+v+"},"));
 ````
 
-### Function의 합성과 Predicate의 결합
+## Stream
+List는 Collections.sort()를 사용하고, 배열은 Arrays.sort()를 사용해야 하는 불편한 문제를 해결하기 위해 만든 것이 Stream 이다.
+
+데이터 소스를 추상화하고, 데이터를 다루는데 자주 사용되는 메서드들을 정의해 놓았다.
+
+````java
+String[] strArr = {"aaa", "ddd", "ccc"};
+List<String> strList = Arrays.asList(strArr);
+````
+위 코드를 기반으로 하는 스트림은 아래와 같다.
+````java
+Stream<String> strStream1 = strList.stream();
+Stream<String> strStream2 = Arrays.stream(strArr);
+````
+위 두 개의 스트림으로 데이터를 읽 정렬하고 출력하는 방법 (정렬되는 것은 아님) 
+````java
+//스트림을 이용한 정렬 및 출력
+strStream1.sorted().forEach(System.out::println);
+strStream1.sorted().forEach(System.out::println);
+
+//기존의 방법이라면..
+Arrays.sort(strArr);
+Collections.sort(strList);
+
+for(String str : strArr)
+    System.out.println(str);
+
+for(String str : strList)
+    System.out.println(str);
+````
+정렬과 출력이 완전 동일함을 알 수 있다! 또, 간결하고 이해가 쉬움.
+
+### 스트림의 특징
+#### 스트림은 데이터 소스를 변경하지 않는다.
+읽기만 할 뿐 변경하지 않는다. 정렬된 결과를 컬렉션이나 배열에 담아야만 반환 가능!
+#### 스트림은 일회용이다.
+Iterator처럼 한번 사용하면 닫혀서 다시 사용이 불가능하다.
+#### 스트림은 작업을 내부 반복으로 처리한다.
+forEach 메서드
+#### 스트림의 연산
+다양한 연산 이용해 간단하게 작업 처리 가능
+
+### 스트림의 연산
+#### 배열
+````java
+Stream<String> strStream = Stream.of("a","b","c");
+Stream<String> strStream = Stream.of(new String[] {"a","b","c"});
+Stream<String> strStream = Stream.of(new String[] {"a","b","c"}, 0, 3); // int startInclusive, int endExclusive
+````
+#### 특정 범위의 정수
+지정된 범위의 연속된 정수를 스트림으로 생성
+````java
+IntStream.range(int begin, int end)
+IntStream.rangeClosed(int begin, int end)
+````
+#### 람다식 - iterator(), generate()
+람다식에 의해 계산되는 값들을 요소로 하는 무한 스트림을 생성한다.
+
+- Iterator
+````java
+Stream<Integer> evenStream = Stream.iterate(0, n->n+2); //0, 2, 4, 6, ...
+````
+- generate()
+
+무한 스트림 생성해 반환하나, 이전 결과를 갖고 다음 요소를 계산하지 않는다.
+````java
+Stream<Integer> randomStream = Stream.generate(Math::random); //0, 2, 4, 6, ...
+````
+이때, 반환값을 IntStream, DoubleStream 같은 기본형 스트림 타입의 참조변수로 다룰 수 없음. 이건 MapToInt() 사용하면 됨.
+
+#### 빈 스트림
+스트림의 연산을 수행한 결과가 하나도 없을 때 null 보다는 빈 스트림 반환이 좋다.
+````java
+Stream emptyStream = Stream.empty();
+long count = emptyStream.count(); // 0
+````
+
+#### 두 스트림의 연결
+스트림끼리 연결이 가능하다
+````java
+Stream<String> strs1 = Stream.of(str1);
+Stream<String> strs2 = Stream.of(str2);
+Stream<String> strs3 = Stream.concat(strs1, strs2);
+````
