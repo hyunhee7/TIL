@@ -156,3 +156,37 @@ Stream<String> strs1 = Stream.of(str1);
 Stream<String> strs2 = Stream.of(str2);
 Stream<String> strs3 = Stream.concat(strs1, strs2);
 ````
+### 스트림의 중간 연산
+#### 자르기 - skip(), limit()
+````java
+IntStream intStream = IntSream.rangeClosed(1,10); //1-10을 갖는 스트림 생성
+intStream.skip(3).limit(5).forEach(System.out::print); //4,5,6,7,8
+````
+#### 요소 걸러내기 - filter(), distinct()
+filter - 조건에 맞는 요소만 넣음
+````java
+IntStream intStream = IntSream.rangeClosed(1,10);
+intStream.filter(i -> i%2==0).forEach(System.out::print);
+````
+distinct - 스트림의 중복 요소들을 제거
+````java
+IntStream intStream = IntSream.of(1,2,2,3,4,4,5,5,5,6,6,6,6,6,6);
+intStream.distinct().forEach(System.out::print); // 123456
+````
+#### 정렬 - sorted()
+````java
+Steam<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
+strStream.sorted().forEach(System.out::print); // CCaabccdd
+strStream.sorted((s1,s2)->s1.compateTo(s2));
+strStream.sorted(Comparator.reverseOrder());
+strStream.sorted(Comparator.<String>naturalOrder().reverse());
+````
+학생 스트림을 반별, 성적순, 이름순으로 정렬하고 출력
+````java
+studentStream.sorted(Comparator.comparing(Student::getBan)
+                                .thenComparing(Student::getTotalScore)
+                                .thenComparing(Student::getName)
+                                .forEach(System.out::println));
+````
+#### 변환 - map()
+원하는 필드만 뽑아내거나 특정 형태로 변환해야할 때 사용
