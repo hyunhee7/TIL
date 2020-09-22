@@ -190,3 +190,121 @@ studentStream.sorted(Comparator.comparing(Student::getBan)
 ````
 #### 변환 - map()
 원하는 필드만 뽑아내거나 특정 형태로 변환해야할 때 사용
+````java
+Stream<File> fileStream = Stream.of(new File("ex1.java"), new File("ex1"), new File("ex2.java"), new File("ex1.bak"), new File("ex1.txt"));
+Stream<String> filenameStream = fileStream.map(File::getName)
+                                          .filter(s -> s.indexOf('.')!=-1) //확장자가 없으면 제외
+                                          .map(String::toUpperCase)        
+                                          .distinct()                      //중복제거
+                                          .forEach(System.out::print);     //JAVABAKTXT
+````
+
+#### 조회 - peek()
+연산과 연산 사이에 확인할 때 사용
+````java
+fileStream.map(File::getName)
+          .filter(s -> s.indexOf('.')!=-1)
+          .peek(s->System.out.printf("filename=%s%n", s)) //파일명을 출력한다.
+````
+
+#### mapToInt(), mapToLong(), mapToDouble()
+````java
+IntStream studentScoreStream = studentStream.mapToInt(Student::getTotalScore);
+int allTotalScore = studentScoreStream.sum(); //스트림의 모든 요소 총합 - 기본스트림에서 제공하는 메서드
+````
+### Optional<T>, OptionalInt
+최종 연산 결과 타입으로 자주 씀.
+
+### 스트림의 최종 연산
+#### forEach()
+#### 조건 검사 - allMatch(), anyMatch(), noneMatch(), findFirst(), findAny()
+boolean으로 리턴한다.
+
+#### 통계 - count(), sum(), average(), max(), min()'
+
+#### collect()
+스트림의 요소를 수집하는 최종 연산.
+* collect() - 스트림의 최종 연산, 매개변수로 컬렉터를 필요로 함.
+* Collector - 인터페이스, 컬렉터는 이 인터페이스를 구현해야 한다.
+* Collectors - 클래스, static메서드로 미리 작성된 컬렉터를 제공해야한다.
+
+````java
+List<String> names = stuStream.map(Student::getName).collect(Collectors.toList());
+ArrayList<String> list = names.stream().collect(Collectors.toCollection(ArrayList::new));
+````
+#### 스트림을 컬렉션과 배열로 변환 - toList(), toSet(), toMap(), to Collection(), toArray()
+#### 통계 - counting(), summingInt(), averagingInt(), maxBy(), minBy()
+#### 리듀싱 - reducing()
+#### 문자열 결합 - joining()
+
+
+### 스트림의 중간 연산
+#### 자르기 - skip(), limit()
+````java
+IntStream intStream = IntSream.rangeClosed(1,10); //1-10을 갖는 스트림 생성
+intStream.skip(3).limit(5).forEach(System.out::print); //4,5,6,7,8
+````
+#### 요소 걸러내기 - filter(), distinct()
+filter - 조건에 맞는 요소만 넣음
+````java
+IntStream intStream = IntSream.rangeClosed(1,10);
+intStream.filter(i -> i%2==0).forEach(System.out::print);
+````
+distinct - 스트림의 중복 요소들을 제거
+````java
+IntStream intStream = IntSream.of(1,2,2,3,4,4,5,5,5,6,6,6,6,6,6);
+intStream.distinct().forEach(System.out::print); // 123456
+````
+#### 정렬 - sorted()
+````java
+Steam<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
+strStream.sorted().forEach(System.out::print); // CCaabccdd
+strStream.sorted((s1,s2)->s1.compateTo(s2));
+strStream.sorted(Comparator.reverseOrder());
+strStream.sorted(Comparator.<String>naturalOrder().reverse());
+````
+학생 스트림을 반별, 성적순, 이름순으로 정렬하고 출력
+````java
+studentStream.sorted(Comparator.comparing(Student::getBan)
+                                .thenComparing(Student::getTotalScore)
+                                .thenComparing(Student::getName)
+                                .forEach(System.out::println));
+````
+#### 변환 - map()
+원하는 필드만 뽑아내거나 특정 형태로 변환해야할 때 사용
+
+[연습코드](https://github.com/hyunhee7/TIL/blob/master/Algorithm/Algorithm_JAVA/src/java8/stream/StreamCollect.java)
+
+#### 그룹화와 분할 - groupingBy(), partitioningBy()
+
+* partitioningBy()에 의한 분류
+    
+    학생들을 성별로 나누어 List에 담는다.
+
+    ````java
+    //1. 기본 분할
+    Map<Boolean, List<Student>> stuBySex = stuStream.collect(partitioningBy(Student::isMale));
+    //남학생 목록
+    List<Student> maleStudent = stuBySex.get(true);
+    //여학생 목록
+    List<Student> femaleStudent = stuBySex.get(false);
+  
+    //2. 기본 분할 + 통계 정보
+    Map<Boolean, Long> stuNumBySex = stuStream.collect(partitioningBy(Student::isMale, counting()));
+    System.out.println("남학생 수: "+stuNumBySex.get(true));
+    System.out.println("여학생 수: "+stuNumBySex.get(false));
+  
+    //3. 총점은 어떻게 구할까
+    Map<Boolean, Optional<Student>> topScoreBySex = stuStream.collect(
+          partitioningBy(Student::isMale, maxBy(comparingInt(Student::getScore))
+      )
+    );
+    System.out.println("남학생 1등:"+topScoreBySex.get(true)); // 남학생 1등 :Optional[[김, 남, 1, 1, 300]]
+    System.out.println("여학생 1등:"+topScoreBySex.get(true)); // 여학생 1등 :Optional[[김, 남, 1, 1, 390]]
+    ````
+  
+* groupingBy()
+
+    그룹을 지어 Map에 저장. 통계낼 때 많이 사용하는 듯 하다
+
+    [groupping 예제](https://github.com/hyunhee7/TIL/blob/master/Algorithm/Algorithm_JAVA/src/java8/stream/StreamGrouppingBy.java)
