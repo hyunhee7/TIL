@@ -318,52 +318,5 @@ studentStream.sorted(Comparator.comparing(Student::getBan)
 
     [groupping 예제](https://github.com/hyunhee7/TIL/blob/master/Algorithm/Algorithm_JAVA/src/java8/stream/StreamGrouppingBy.java)
     
-# IO
-## 스트림
-연속적인 데이터의 흐름. 단방향 통신만 가능.
-
-입력과 출력 동시 수행을 위해서는 입력, 출력 2개의 스트림이 필요.
-
-큐(FIFO)의 구조.
-
-## 바이트기반 스트림 - InputSream, OutputStream
-스트림은 1바이트단위로 데이터를 전송하며, 입출력 대상에 따라 스트림을 선택해 사용한다.
-
-### 파일
-* FileInputStream
-* FileOutputStream
-
-### 메모리
-* ByteArrayInputStream
-* ByteArrayOutputStream
-
-### 프로세스
-* PipedInputStream
-* PipedOutputStream
-
-### 오디오장치
-* AudioInputStream
-* AudioOutputStream
-
-## 보조 스트림
-실제 데이터를 주고받지 않아 데이터를 입출력할 수 없지만 기능향상, 새로운 기능 추가가 가능하다.
-
-````java
-//1. 기반 스트림 생성
-FileInputStream fis = new FileInputStream("test.txt");
-//2. 기반 스트림 이용해 보조 스트림 생성
-BufferedInputStream bis = new BufferedInputStream(fis);
-//3. 보조스트림 bis로 부터 데이터를 읽는다.
-bis.read();
-````
-
-## 문자기반 스트림
-문자열 처리의 경우 Java에서 2byte 이기 때문에 문자 기반의 스트림 사용해야 한다.
-
-바이트 기반 스트림을
-* InputStream -> Reader
-* OutputStream -> Writer
-
-로 바꾸면 문자 기반의 스트림이 된다.
 
 
