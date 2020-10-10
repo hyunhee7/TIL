@@ -196,4 +196,3 @@ public class DroolsRuleDiscounter implements RuleDiscounter {
 3. 하위 도메인을 하위 패키지로 구성한 모듈
 4. 얼마나 세분화해야 하는지 규칙 없다. 코드 찾기 불편함 없으면 됨. 
 (타입 10개 이상일 때 분리 추천)
-
