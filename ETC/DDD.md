@@ -184,6 +184,7 @@ public class DroolsRuleDiscounter implements RuleDiscounter {
     1. 도메인 영역과 응용 영역에서 인프라스트럭처 기능 직접 사용 
     2. 두 영역에 정의한 인터페이스를 인프라스트럭처 영역에서 구현하는 것
 
+
 그렇다면, 무조건 이게 좋은가? 노노
 
 구현에 편리함이 크다면 DIP 장점 해치지 않는 선에서 의존 가져가는 것이 현명.
@@ -196,3 +197,91 @@ public class DroolsRuleDiscounter implements RuleDiscounter {
 3. 하위 도메인을 하위 패키지로 구성한 모듈
 4. 얼마나 세분화해야 하는지 규칙 없다. 코드 찾기 불편함 없으면 됨. 
 (타입 10개 이상일 때 분리 추천)
+
+# 3. 애그리거트
+복잡한 도메인을 이해하고 관리하기 쉬운 상위 단위로 만들기 위해 생긴 개념
+
+## 경계 설정
+경계 설정 시 기본 사항 = 도메인 규칙과 요구사항
+
+ex. 상품 상세 페이지에는 상품정보와 리뷰가 있다. == Product 엔티티, Review 엔티티가 한 애그리거트이다?
+
+= 그렇지 않다. Product 수정한다고 Review 수정되지 않기 때문.
+
+## 에그리거트 루트
+애그리거트에 속한 모든 객체가 일관된 상태 유지할 수 있도록 책임지는 곳
+
+### 도메인규칙과 일관성
+에그리거트 일관성 깨지지 않도록 하는 것.
+
+* 도메인 모델에서 공개 set 메서드는 가급적 피하기
+* 밸류는 불변 타입으로 구현하기
+    ````java
+      ShippingInfo si = order.getShippingInfo();
+      si.setAddress(newAddress); // 컴파일 에러
+    ````
+    그럼 어떻게 ?
+    ````
+    public class Order {
+        private ShippingInfo shippingInfo;
+        public void changeShippingInfo(ShippingInfo newShippingInfo){
+            verifyNotYetShipped();
+            setShippingInfo(newShippingInfo);
+        }
+        //set 메서드의 접근 허용 범위는 private
+        private void setShippingInfo(ShippingInfo newShippingInfo){
+            //값을 할당해야한다
+            this.shippingInfo = newShippingInfo;
+        }
+    }
+    ````
+  
+### 에그리거트 루트 기능 구현
+* 구성요소의 상태 참조
+* 내부의 필드 상태 변경 위임
+
+### 트랜잭션 범위
+* 한 트랜잭션에서는 한 개의 애그리거트만 수정
+* 여러 개 애그리거트 수정해야한다면, 응용 서비스에서 따로 구현
+
+## 리포지터리와 애그리거트
+* 애그리거트와 관련된 테이블이 여러개이면, 리포지터리 통해서 모든 구성요소 데이터 저장
+
+## ID 이용한 애그리거트 참조
+* 직접 참조를 할 경우, 다른 애그리거트 접근이 가능해진다
+* 의존도 증가, 성능 저하, 확장 어려움이 생길 수 있음
+    ````
+    public class Order{
+        private Orderer orderer;
+        public void changeShippingInfo(ShippingInfo newShippingInfo, boolean useNewShippingAddrAsMemberAddr){
+            ..
+            if (useNewShippingAddrAsMemeberAddr){
+                orderer.getCustomer().changeAddr(newShippingInfo.getAddress()); //다른 애그리거트를 침범
+            }
+        }
+    }
+    ````
+  그러면 어떻게 해야할까?
+  
+  * Id를 이용해 다른 애그리거트 참조
+  * DB 외래키를 사용하는 느낌
+  
+  ````java
+  public class ChangeOrderService{
+      @Transactional
+      public void changeShippingInfo(OrderId id, ShippingInfo newShippingInfo, boolean useNewShippingAddrAsMemberAddr) {
+          Order order = orderRepository.findbyId(id);
+          if(order == null) throw new OrderNotFoundException();
+          order.changeShippingInfo(newShippingInfo);
+          if (useNewShippingAddrAsMemberAddr){
+              Customer customer = customerRepository.findById(order.getOrderer().getCustomerId());
+              customer.changeAddress(newShippingInfo.getAddress);  
+          }
+      }
+  }
+  ````
+  * 물리적 연결 제거
+  * 응집도는 높여줌
+  * 지연로딩
+  * 복잡도를 낮춤
+  
