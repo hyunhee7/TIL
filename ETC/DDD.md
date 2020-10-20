@@ -284,4 +284,32 @@ ex. 상품 상세 페이지에는 상품정보와 리뷰가 있다. == Product �
   * 응집도는 높여줌
   * 지연로딩
   * 복잡도를 낮춤
-  
+
+### ID 이용한 참조와 조회 성능
+````java
+Customer customer = customerRepository.findById(ordererId);
+List<Order> orders = orderRepository.findByOrderer(ordererId);
+List<OrderView> dtos = orderes.stream().map(order-> {
+                            ProductId prodId = order.getOrderLines().get(0).getProductId();
+                            Product product = productRepository.findById(prodId);
+                            return new OrderView(order,customer,product);
+                       }).collect(toList());  
+````
+* N+1 조회 문제
+
+    - 주문서를 가져오기 위해 1번의 쿼리와 주문별 N번의 쿼리 실행
+    - 전체 조회 속도 느려짐
+    
+    해결하려면?
+    
+    - 객체 참조 방식으로 돌린다 (효율적이지 않음)
+    - 전용 조회 쿼리를 만든다
+    - 애그리거트마다 다른 저장소 사용할 경우, 조회 성능 향상을 위해 **캐시적용이나 조회 전용 저장소를 따로 구성**한다. (특히, 한 대의 DB장비로 대응 불가능한 경우 필수)
+    - => 코드는 복잡해지지만, 시스템의 처리량 높일 수 있다.
+
+## 애그리거트를 팩토리로 사용하기
+애그리거트가 갖고 있는 데이터를 이용해 다른 애그리거트 생성해야할 경우, 애그리거트에 팩토리 메서드 구현 고려해보자.
+* (참고) 팩토리 메서드
+https://johngrib.github.io/wiki/factory-method-pattern/
+https://gmlwjd9405.github.io/2018/08/07/factory-method-pattern.html
+
