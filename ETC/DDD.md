@@ -313,3 +313,5 @@ List<OrderView> dtos = orderes.stream().map(order-> {
 https://johngrib.github.io/wiki/factory-method-pattern/
 https://gmlwjd9405.github.io/2018/08/07/factory-method-pattern.html
 
+# 4. 리포지터리와 모델 구현(JPA 중심)
+
