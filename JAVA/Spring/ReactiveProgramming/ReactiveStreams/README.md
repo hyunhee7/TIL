@@ -120,10 +120,10 @@ public static void main(String[] args) {
 ![pubsubandbackpressure](https://jongmin92.github.io/images/post/2019-11-05/reactive-streams.png)  
 이미지 출처 : [https://jongmin92.github.io/%5D](https://jongmin92.github.io/%5D)
 
-1.  Subscriber가 Publisher에게 구독 요청
-2.  Publisher가 Subscriber에게 Subscription 전달
-3.  Subscriber가 Subscription을 통해 데이터를 전달
-4.  Publisher가 Subscription을 통해 전달 속도 조절하며 요청 전달, 완료 및 에러 여부 전달
+1.  subscriber의 구독 시작 (pub.subscribe(sub))
+2.  onSubscribe를 통해 구독 시작
+4.  Subscriber가 publisher로 Subscription을 통해 request, cancel method 전달
+5.  Publisher가 Subscription을 통해 전달 속도 조절하며 요청 전달, 완료 및 에러 여부 전달
 
 [reactive-streams GITHUB](https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.3) 참고
 
