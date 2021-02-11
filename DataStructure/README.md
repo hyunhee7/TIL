@@ -118,3 +118,120 @@ class Node{
 
     }
 ```
+
+
+# 배열과 문자열
+
+## 해시테이블
+key를 value에 대응시키는 자료구조
+
+### 해시테이블의 구현
+연결리스트 + 해시코드 함수
+
+1. 키의 해시코드 계산
+2. 해시 코드를 이용해 배열의 인덱스 계산
+3. 키와 값을 해당 인덱스에 저장한다.
+
+### 수행 시간
+worst : ** O(n)**
+best : O(1)
+균형 이진 탐색 트리 이용할 경우 : O(logN)
+
+### HashMap vs HashTable
+동기화가 필요 없다면 HashMap, 동기화 보장이 필요하다면 Hashtable을 사용하면 된다.
+
+### set vs map
+
+## ArrayList와 가변 크기 배열
+
+- 크기를 자동으로 조절
+- 배열이 가득 차는 순간, 배열의 크기를 두 배로 늘린다.
+
+## StringBuilder
+
+가변 크기의 배열을 이용하여 필요한 경우에만 문자열을 복사하도록 한다.
+
+* 일반적인 경우
+
+	문자열의 길이 x와 words 갯수 n으로 O(xn^2), 즉 O(n^2)이 된다.
+    ```
+    String joinWords(String[] words){
+        String sen = "";
+        for(String w : words){
+            sentence = sentence + w;
+        }
+        return sentence;
+    }
+    ```
+    
+*  StringBuilder 사용할 경우
+
+	가변 크기의 배열 이용하여 필요한 경우에만 문자열 복사.
+    ```
+    String joinWords(String[] words){
+        StringBuilder sen = new StringBuilder();
+        for(String w : words){
+            sentence.append(w);
+        }
+        return sentence.toString();
+    }
+    ```
+
+### 문제
+
+#### 1.1 중복이 없는가
+```
+bool isCheck(string line) {
+	if (line.size() > 128) return false;
+	for (int i = 0; i < line.size(); i++) {
+		if (line[i]) {
+			return false;
+		}
+		alphabet[line[i]]=true;
+	}
+	return true;
+}
+```
+
+#### 1.2 순열 확인
+
+방법1. 정렬하기
+방법2. 문자 출현 횟수 검사
+
+```
+bool isCheck(string line, string anoline){
+	int alphabet[27] = { 0, };
+    bool answer = true;
+	for(int i=0;i<line.size();i++){
+    	alphabet[line[i]]++;
+    }
+    for(int i=0;i<anoline.size();i++){
+    	if(alphabet[anoline[i]]){
+        	return false;
+        }
+    }
+}
+```
+
+#### 1.3 URLify
+
+```
+bool changeBlank(string line, int len){
+	int val = 0;
+    
+	for(int i=0;i<len;i++){
+    	if(line[i]==' '){
+        	val++;
+        }
+    }
+    char* newarr = new char[len+val];
+    for(int i=0;i<len;i++){
+    	if(line[i]==' '){
+        	newarr[i]='%'
+            newarr[i+1]='2';
+            newarr[i+2]='0';
+            i+=1;
+        }
+    }
+}
+```
