@@ -1,4 +1,4 @@
-# Reactive Programming
+# Reactive Streams
 
 [토비의봄TV 6화 스프링 리액티브 프로그래밍](https://youtu.be/8fenTR3KOJo) 을 바탕으로 정리한 글입니다.  
 
@@ -191,3 +191,207 @@ public static void main(String[] args) {
         p.subscribe(s);
     }
 ```
+
+# Reactive Streams - Operator
+
+## Publisher - Subscriber 의 기본 구조
+````java
+public class  PubSub {
+    Publisher<Integer> pub = new Publisher<Integer>() {
+        @Override
+        public void subscribe(Subscriber<? super Integer> sub) {
+            sub.onSubscribe(new Subscription() {
+                @Override
+                public void request(long l) {
+
+                }
+
+                @Override
+                public void cancel() {
+
+                }
+            });
+        }
+    };
+    Subscriber<Integer> sub = new Subscriber<Integer>() {
+        @Override
+        public void onSubscribe(Subscription subscription) {
+
+        }
+
+        @Override
+        public void onNext(Integer i) {
+
+        }
+
+        @Override
+        public void onError(Throwable t) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    };
+}
+
+````
+
+## Operator
+mapping, filter, reducer 등 Stream Data 가공하는 작업 진행
+
+1. Map : Data1 -> function -> Data2
+
+````java
+public class PubSub {
+
+    public static void main(String[] args) {
+        Publisher<Integer> pub = iterPub(Stream.iterate(1, a -> a + 1).limit(10).collect(Collectors.toList()));
+        Publisher<Integer> mapPub = mapPub(pub, s -> s * 10);
+        Publisher<Integer> map2Pub = mapPub(mapPub, s -> -s);
+        map2Pub.subscribe(logSub());
+    }
+
+    private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> f) {
+        return new Publisher<Integer>() {
+            //map을 이용한 operator 기능 구현
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                pub.subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        sub.onSubscribe(s);
+                    }
+
+                    @Override
+                    public void onNext(Integer i) {
+                        sub.onNext(f.apply(i));
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        sub.onError(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        sub.onComplete();
+                    }
+                });
+            }
+        };
+    }
+
+    private static Subscriber<Integer> logSub() {
+        return new Subscriber<Integer>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+                log.debug("onSubscribe:");
+                s.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onNext(Integer i) {
+                log.debug("onNext:{}", i);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                log.debug("onError:{}", t);
+            }
+
+            @Override
+            public void onComplete() {
+                log.debug("onComplete");
+            }
+        };
+    }
+
+    private static Publisher<Integer> iterPub(final List<Integer> iter) {
+        return new Publisher<Integer>() {
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                sub.onSubscribe(new Subscription() {
+                    @Override
+                    public void request(long n) {
+                        try {
+                            iter.forEach(s -> sub.onNext(s));
+                            sub.onComplete();
+                        } catch (Throwable t) {
+                            sub.onError(t);
+                        }
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                });
+            }
+        };
+    }
+}
+
+````
+
+2. sumPub - sumPub을 통해 값을 더해서 lobSub로 로그 출력
+
+````java
+public class PubSub {
+
+    public static void main(String[] args) {
+        Publisher<Integer> pub = iterPub(Stream.iterate(1, a -> a + 1).limit(10).collect(Collectors.toList()));
+        Publisher<Integer> sumPub = sumPub(pub);
+        sumPub.subscribe(logSub());
+    }
+
+    private static Publisher<Integer> sumPub(Publisher<Integer> pub) {
+        return new Publisher<Integer>() {
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                pub.subscribe(new DelegateSub(sub){
+                    int sum = 0;
+
+                    @Override
+                    public void onNext(Integer i) {
+                        sum+=i;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        sub.onNext(sum);
+                        sub.onComplete();
+                    }
+                });
+            }
+        };
+    }
+
+    private static Subscriber<Integer> logSub() {
+        return new Subscriber<Integer>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+                log.debug("onSubscribe:");
+                s.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onNext(Integer i) {
+                log.debug("onNext:{}", i);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                log.debug("onError:{}", t);
+            }
+
+            @Override
+            public void onComplete() {
+                log.debug("onComplete");
+            }
+        };
+    }
+}
+````
+
