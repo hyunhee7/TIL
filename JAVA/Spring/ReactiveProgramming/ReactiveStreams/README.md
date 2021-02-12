@@ -128,68 +128,68 @@ public static void main(String[] args) {
 [reactive-streams GITHUB](https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.3) 참고
 
 ```java
-    public static void main(String[] args) {
-        //publisher - 내가 데이터 100만개 줄게!
-        //subscriber - 나는 처리 못해 하나당 1초걸려
-        //이런 경우 backpressure로 조절한다. -> 버퍼를 일정하게 유지하여 더욱 안정적이다.
-        Iterable<Integer> itr = Arrays.asList(1,2,3,4,5);
-        Publisher p = new Publisher() {
-            @Override
-            public void subscribe(Subscriber subscriber) {
-                subscriber.onSubscribe(new Flow.Subscription() {
-                    //subscriber의 부탁이 쓰여있는 역할, backpressure(역압, 처리량 등을 조절하도록 하는 메서드들이 있다)
+public static void main(String[] args) {
+    //publisher - 내가 데이터 100만개 줄게!
+    //subscriber - 나는 처리 못해 하나당 1초걸려
+    //이런 경우 backpressure로 조절한다. -> 버퍼를 일정하게 유지하여 더욱 안정적이다.
+    Iterable<Integer> itr = Arrays.asList(1,2,3,4,5);
+    Publisher p = new Publisher() {
+        @Override
+        public void subscribe(Subscriber subscriber) {
+            subscriber.onSubscribe(new Flow.Subscription() {
+                //subscriber의 부탁이 쓰여있는 역할, backpressure(역압, 처리량 등을 조절하도록 하는 메서드들이 있다)
 
-                    Iterator<Integer> it = itr.iterator();
-                    @Override
-                    public void request(long n) {
-                        while(n-- > 0){
-                            if (it.hasNext()) {
-                                subscriber.onNext(it.next());
-                            }else{
-                                subscriber.onComplete();
-                                break;
-                            }
+                Iterator<Integer> it = itr.iterator();
+                @Override
+                public void request(long n) {
+                    while(n-- > 0){
+                        if (it.hasNext()) {
+                            subscriber.onNext(it.next());
+                        }else{
+                            subscriber.onComplete();
+                            break;
                         }
                     }
-                    @Override
-                    public void cancel() {
+                }
+                @Override
+                public void cancel() {
 
-                    }
-                });
-            }
-        };
-        Subscriber<Integer> s = new Subscriber<Integer>() {
-            Flow.Subscription subscription;
-            @Override
-            public void onSubscribe(Flow.Subscription subscription) {
-                //subscriber의 부탁이 들어있는 subscription을 바탕으로 pub에게 알림  부탁하는 메서드
-                System.out.println("onSubscribe");
-                this.subscription = subscription;
-                subscription.request(1);
-            }
+                }
+            });
+        }
+    };
+    Subscriber<Integer> s = new Subscriber<Integer>() {
+        Flow.Subscription subscription;
+        @Override
+        public void onSubscribe(Flow.Subscription subscription) {
+            //subscriber의 부탁이 들어있는 subscription을 바탕으로 pub에게 알림  부탁하는 메서드
+            System.out.println("onSubscribe");
+            this.subscription = subscription;
+            subscription.request(1);
+        }
 
-            @Override
-            public void onNext(Integer item) {
-                //다음걸 줬다는 알림 역할
-                System.out.println("onNext "+item);
-                this.subscription.request(1);
-            }
+        @Override
+        public void onNext(Integer item) {
+            //다음걸 줬다는 알림 역할
+            System.out.println("onNext "+item);
+            this.subscription.request(1);
+        }
 
-            @Override
-            public void onError(Throwable throwable) {
-                //Exception 발생 대신 Object 전달 역할 (try catch 필요없음)
-                System.out.println("onError");
-            }
+        @Override
+        public void onError(Throwable throwable) {
+            //Exception 발생 대신 Object 전달 역할 (try catch 필요없음)
+            System.out.println("onError");
+        }
 
-            @Override
-            public void onComplete() {
-                //더이상 줄 데이터 없다는 알림
-                System.out.println("onComplete");
-            }
-        };
+        @Override
+        public void onComplete() {
+            //더이상 줄 데이터 없다는 알림
+            System.out.println("onComplete");
+        }
+    };
 
-        p.subscribe(s);
-    }
+    p.subscribe(s);
+}
 ```
 
 # Reactive Streams - Operator
@@ -395,3 +395,50 @@ public class PubSub {
 }
 ````
 
+## Schedulers
+
+액션을 별도의 스레드에서 작동시키고, 메인스레드에서 작동하도록 구현해보자.
+
+1. SubscribeOn
+![SubscribeOnImage](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/doc-files/marbles/subscribeOnForFlux.svg)
+[출처: projectreactor.io]
+````java
+Publisher<Integer> subOnPub = sub -> {
+    ExecutorService es = Executors.newSingleThreadExecutor();
+    es.execute(()->pub.subscribe(sub));
+    //pub.subscribe(sub);
+};
+````
+
+2. PublishOn
+![PublishOnImage](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/doc-files/marbles/publishOnForFlux.svg)
+[출처: projectreactor.io]
+
+````java
+Publisher<Integer> pubOnPub = sub -> {
+    pub.subscribe(new Subscriber<Integer>() {
+        ExecutorService es = Executors.newSingleThreadExecutor();
+
+        @Override
+        public void onSubscribe(Subscription s) {
+            sub.onSubscribe(s);
+        }
+
+        @Override
+        public void onNext(Integer integer) {
+            //반드시 단일 Thread 내에서 onNext()를 호출하도록 되어있다.
+            es.execute(()->sub.onNext(integer));
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            es.execute(()->sub.onError(t));
+        }
+
+        @Override
+        public void onComplete() {
+            es.execute(()->sub.onComplete());
+        }
+    });
+};
+````
